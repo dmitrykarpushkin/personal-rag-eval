@@ -19,7 +19,7 @@ TAG = os.environ.get("PRAG_TAG", "")  # results suffix, e.g. "-xl"
 sys.path.insert(0, str(ROOT / "src"))
 from prag import retrieve, store  # noqa: E402
 
-SYSTEMS = ["grep", "lexical", "dense", "hybrid", "hybrid+rerank"]
+SYSTEMS = ["grep", "lexical", "dense", "hybrid-rrf", "hybrid", "hybrid+rerank"]
 
 
 def load_gold():

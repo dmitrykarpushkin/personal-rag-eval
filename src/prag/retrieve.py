@@ -78,7 +78,31 @@ def rrf(*lists: list[dict], k: int = 60, top: int = 50) -> list[dict]:
     return [{**keep[key], "score": score[key]} for key in ranked]
 
 
+def _minmax(lst: list[dict]) -> dict:
+    if not lst:
+        return {}
+    s = [d["score"] for d in lst]
+    lo, hi = min(s), max(s)
+    return {(d["path"], d["ord"]): ((d["score"] - lo) / (hi - lo) if hi > lo else 1.0) for d in lst}
+
+
+ALPHA = 0.7  # weight of the dense score; picked on the hand-written half of the gold set (see README)
+
+
 def hybrid(conn, q: str, k: int = 50) -> list[dict]:
+    """Convex fusion of min-max normalised BM25 and dense scores.
+
+    Plain RRF was tried first and lost to dense alone (hit@5 0.77 vs 0.87): BM25 returns plenty of
+    loosely matching chunks, and RRF rewards chunks that appear in both lists over a clear dense winner.
+    """
+    L, D = lexical(conn, q, k), dense(conn, q, k)
+    nl, nd = _minmax(L), _minmax(D)
+    keep = {(d["path"], d["ord"]): d for d in L + D}
+    ranked = sorted(keep, key=lambda key: -(ALPHA * nd.get(key, 0.0) + (1 - ALPHA) * nl.get(key, 0.0)))[:k]
+    return [{**keep[key], "score": ALPHA * nd.get(key, 0.0) + (1 - ALPHA) * nl.get(key, 0.0)} for key in ranked]
+
+
+def hybrid_rrf(conn, q: str, k: int = 50) -> list[dict]:
     return rrf(lexical(conn, q, k), dense(conn, q, k), top=k)
 
 
@@ -118,6 +142,7 @@ SYSTEMS = {
     "grep": None,  # handled specially (needs corpus root, not db)
     "lexical": lexical,
     "dense": dense,
+    "hybrid-rrf": hybrid_rrf,
     "hybrid": hybrid,
     "hybrid+rerank": hybrid_rerank,
 }
