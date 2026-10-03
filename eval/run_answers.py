@@ -147,6 +147,8 @@ def main():
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--out", default=f"answers{TAG}.jsonl")
+    ap.add_argument("--repeat", type=int, default=1,
+                    help="run every (system, question) N times; rows carry run=0..N-1 (existing rows count as run 0)")
     a = ap.parse_args()
     qs = load_gold()[: a.limit or None]
     corpus_text = full_corpus()
@@ -155,15 +157,21 @@ def main():
     out = ROOT / "eval/results" / a.out
     done = set()
     if out.exists():
-        done = {(r["id"], r["system"]) for r in map(json.loads, out.open())}
-    conn = store.connect()
-    jobs = [(s, q) for s in a.systems.split(",") for q in qs if (q["id"], s) not in done]
+        done = {(r["id"], r["system"], r.get("run", 0)) for r in map(json.loads, out.open())}
+    systems = a.systems.split(",")
+    conn = store.connect() if any(s.startswith("rag:") for s in systems) else None
+    jobs = [(s, q, run) for run in range(a.repeat) for s in systems for q in qs if (q["id"], s, run) not in done]
     print(f"{len(jobs)} runs; retrieving...", flush=True)
-    preps = [prepare(s, q, conn, corpus_text) for s, q in jobs]
+    preps = [prepare(s, q, conn, corpus_text) for s, q, _ in jobs]
+
+    def one(job_prep):
+        (s, q, run), prep = job_prep
+        return {**ask(s, q, prep), "run": run}
+
     with open(out, "a") as fh, ThreadPoolExecutor(a.workers) as ex:
-        for r in ex.map(lambda jp: ask(jp[0][0], jp[0][1], jp[1]), zip(jobs, preps)):
+        for r in ex.map(one, zip(jobs, preps)):
             fh.write(json.dumps(r, ensure_ascii=False) + "\n"); fh.flush()
-            print(r["system"], r["id"], r["correct"], r.get("error", ""), flush=True)
+            print(r["system"], r["id"], f"run={r['run']}", r["correct"], r.get("error", ""), flush=True)
 
 
 if __name__ == "__main__":
