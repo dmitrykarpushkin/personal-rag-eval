@@ -1,0 +1,164 @@
+{
+ "people/mart-rebane.md": [
+  {
+   "fact": "L07",
+   "role": "gold",
+   "must_contain": "Landlord of the Kalamaja flat (Vabriku street)",
+   "question": "Which neighbourhood of Tallinn does Mara live in?"
+  }
+ ],
+ "people/elin-lindqvist.md": [
+  {
+   "fact": "L09",
+   "role": "gold",
+   "must_contain": "Younger sister, lives in Narva, works as a nurse at the city hospital",
+   "question": "Where does Mara's sister Elin live?"
+  }
+ ],
+ "people/kadri-tamm.md": [
+  {
+   "fact": "P02",
+   "role": "gold",
+   "must_contain": "Accountant; handles quarterly VAT and the annual income declaration for the sole-proprietor (FIE) setup",
+   "question": "Who helps Mara with her bookkeeping and tax returns?"
+  },
+  {
+   "fact": "M01",
+   "role": "gold",
+   "must_contain": "Recommended by Hanna Kuusk",
+   "question": "Where does the person who recommended Mara's accountant work?"
+  }
+ ],
+ "meetings/2026-06-03-oskar-mentoring.md": [
+  {
+   "fact": "P06",
+   "role": "gold",
+   "must_contain": "Oskar: stop pricing by the hour in conversations, anchor on the value of the outcome (fewer lost shipments), then quote; raise by at least 10% at renewal",
+   "question": "What was the advice Mara's mentor gave about raising her rate?"
+  }
+ ],
+ "inbox/2026-09-12-0815-voice.md": [
+  {
+   "fact": "T02",
+   "role": "distractors",
+   "must_contain": "voice memo: dentist moved to September 29 (later superseded)",
+   "question": "When is Mara's dentist appointment?"
+  }
+ ],
+ "money/2026-08-04-switch-invoicing.md": [
+  {
+   "fact": "T05",
+   "role": "gold",
+   "must_contain": "Switched invoicing from Invoice Ninja to Merit Aktiva because Kadri can access it directly",
+   "question": "Which accounting software does Mara use now for her invoices?"
+  }
+ ],
+ "money/2026-04-10-invoicing-setup.md": [
+  {
+   "fact": "T05",
+   "role": "distractors",
+   "must_contain": "Set up Invoice Ninja (self-hosted) for invoices",
+   "question": "Which accounting software does Mara use now for her invoices?"
+  }
+ ],
+ "journal/2026-09-05.md": [
+  {
+   "fact": "T08",
+   "role": "distractors",
+   "must_contain": "Predicting 3:55 if the weather holds",
+   "question": "What was Mara's official marathon finish time?"
+  }
+ ],
+ "money/subscriptions.md": [
+  {
+   "fact": "T09",
+   "role": "gold",
+   "must_contain": "Savi studio membership €65/month (raised from €55 in August)",
+   "question": "How much does Mara currently pay for the Savi studio membership?"
+  },
+  {
+   "fact": "A01",
+   "role": "gold",
+   "must_contain": "list incl. Figma Professional renews 2026-10-03 (€15/mo annual), 1Password renews 2026-10-19, Strava renews 2026-10-27, Duolingo renews 2027-02-01, Savi monthly",
+   "question": "Which of Mara's subscriptions renew in October 2026?"
+  }
+ ],
+ "tasks/2026-09-20-vat-q3.md": [
+  {
+   "fact": "A03",
+   "role": "gold",
+   "must_contain": "Send Q3 VAT data to Kadri, due 2026-10-10, open",
+   "question": "Which open tasks are due in the first half of October 2026?"
+  }
+ ],
+ "tasks/2026-09-05-passport-renewal.md": [
+  {
+   "fact": "A03",
+   "role": "gold",
+   "must_contain": "Renew Estonian passport before Lisbon trip, due 2026-10-12, open",
+   "question": "Which open tasks are due in the first half of October 2026?"
+  }
+ ],
+ "tasks/2026-09-22-christmas-glaze-batch.md": [
+  {
+   "fact": "A03",
+   "role": "gold",
+   "must_contain": "Fire the Christmas mug batch at Savi, due 2026-10-15, open",
+   "question": "Which open tasks are due in the first half of October 2026?"
+  }
+ ],
+ "tasks/2026-09-01-physio-followup.md": [
+  {
+   "fact": "A03",
+   "role": "distractors",
+   "must_contain": "physio follow-up, due 2026-10-05, status done",
+   "question": "Which open tasks are due in the first half of October 2026?"
+  }
+ ],
+ "mail/2026-08-02-elin.md": [
+  {
+   "fact": "X01",
+   "role": "gold",
+   "must_contain": "IN RUSSIAN: Элин просит привезти кофемолку из Стокмана и лекарства для мамы",
+   "question": "What did Elin ask Mara to bring when visiting Narva in August?"
+  }
+ ],
+ "inbox/2026-08-11-2140-voice.md": [
+  {
+   "fact": "X02",
+   "role": "gold",
+   "must_contain": "IN RUSSIAN voice memo: маме надо к кардиологу, давление скачет, Элин записала на 25 августа",
+   "question": "What is the reason Mara's mother needs to see a cardiologist?"
+  },
+  {
+   "fact": "X03",
+   "role": "gold",
+   "must_contain": "Элин записала на 25 августа",
+   "question": "When is Mara's mother's cardiologist appointment?"
+  }
+ ],
+ "journal/2026-07-14.md": [
+  {
+   "fact": "X04",
+   "role": "gold",
+   "must_contain": "Decided to skip the €600 design-systems course for now; spend that on the Lisbon deposit instead",
+   "question": "Что Мара решила насчёт курса по дизайн-системам? (What did Mara decide about the design systems course?)"
+  }
+ ],
+ "inbox/2026-09-03-0910-voice.md": [
+  {
+   "fact": "X06",
+   "role": "gold",
+   "must_contain": "IN RUSSIAN: Элин на день рождения — электронную книгу, она жаловалась, что глаза устают от телефона",
+   "question": "What gift idea did Mara note for Elin's birthday?"
+  }
+ ],
+ "people/hanna-kuusk.md": [
+  {
+   "fact": "M01",
+   "role": "gold",
+   "must_contain": "Ex-colleague, now recruiter at a Berlin logistics startup",
+   "question": "Where does the person who recommended Mara's accountant work?"
+  }
+ ]
+}

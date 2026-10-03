@@ -1,0 +1,398 @@
+# World spec for the synthetic notebook. Everything here is fictional.
+# The corpus in corpus/ is generated from this file by an LLM; the gold set in eval/goldset.jsonl
+# is derived from the `facts` below and then checked mechanically against the generated notes.
+#
+# Notebook "today" is 2026-09-30. Notes span 2026-04-01 .. 2026-09-30.
+
+persona:
+  name: Mara Lindqvist
+  age: 31
+  city: Tallinn, Estonia (Kalamaja district)
+  job: freelance product engineer
+  languages: English (notes mostly in English), Russian (grew up in Narva; voice memos and some
+    family notes are in Russian), learning Portuguese
+  goals: move to Lisbon in early 2027; grow pottery side business; run a sub-4h marathon
+
+layout:
+  inbox/: raw captures, one file per capture, name YYYY-MM-DD-HHMM-<source>.md, sources voice|chat|email|web
+  tasks/: one task per file with status (open|done|dropped) and optional due date
+  projects/: one living file per project + dated log entries under projects/<slug>/YYYY-MM-DD-*.md
+  people/: one file per person
+  money/: subscriptions.md, invoices/, taxes.md, budget-*.md
+  meetings/: call summaries (like transcripts summaries) YYYY-MM-DD-<topic>.md
+  mail/: digests of email threads YYYY-MM-DD-<topic>.md
+  journal/: daily journal YYYY-MM-DD.md (not every day)
+  health/: appointments and notes
+
+people:
+  - {id: priya, name: Priya Raman, role: product manager at Kestrel Freight (client of Harbor)}
+  - {id: tomasz, name: Tomasz Wójcik, role: CTO at Kestrel Freight}
+  - {id: jon_a, name: Jon Ahlberg, role: freelance designer working with Mara on Harbor}
+  - {id: john_k, name: John Kask, role: Mara's old university friend, runs a bike shop in Tartu}
+  - {id: elin, name: Elin Lindqvist, role: Mara's younger sister, lives in Narva, writes to Mara in Russian}
+  - {id: ines, name: Inês Carvalho, role: Portuguese tutor (online)}
+  - {id: kadri, name: Kadri Tamm, role: accountant}
+  - {id: rebane, name: Mart Rebane, role: landlord of the Tallinn flat}
+  - {id: oskar, name: Oskar Nilsson, role: mentor, ex-manager from her first job}
+  - {id: liis, name: Liis Org, role: physiotherapist}
+  - {id: saar, name: Dr. Helen Saar, role: dentist}
+  - {id: mand, name: Dr. Peeter Mänd, role: ophthalmologist}
+  - {id: rui, name: Rui Mendes, role: relocation agent in Lisbon}
+  - {id: anu, name: Anu Põld, role: runs the shared ceramics studio "Savi" where Mara fires her pottery}
+  - {id: marta, name: Marta Sousa, role: Lisbon contact, friend of Inês, works at a co-working space}
+  - {id: viktor_v, name: Viktor Volkov, role: running club coach}
+  - {id: hanna, name: Hanna Kuusk, role: ex-colleague, recruiter at a Berlin startup}
+
+projects:
+  - {slug: harbor, name: Harbor, what: shipment-tracking dashboard for Kestrel Freight (freelance contract)}
+  - {slug: glaze, name: Glaze, what: pottery side business, sells mugs and bowls online}
+  - {slug: lisbon, name: Lisbon move, what: relocation to Lisbon, D8 digital nomad visa}
+  - {slug: marathon, name: Marathon, what: training for the Tallinn Marathon on 2026-09-06}
+  - {slug: portuguese, name: Portuguese, what: learning European Portuguese, A2 exam goal}
+  - {slug: ledger, name: Ledger, what: personal finance and taxes}
+
+# Each fact is planted in the listed notes. `gold` = notes that must contain the answer.
+# `distractors` = notes that must exist and look relevant but hold an older/wrong/near-miss value.
+# cat: lookup | paraphrase | temporal | identifier | aggregate | crosslingual | unanswerable | multihop
+facts:
+  # ---------------- lookup ----------------
+  - id: L01
+    cat: lookup
+    q: What is the name of Mara's Portuguese tutor?
+    a: ["Inês Carvalho|Ines Carvalho"]
+    gold: {people/ines-carvalho.md: "Inês Carvalho, Portuguese tutor, lessons over Zoom; met through a Lisbon expat forum in April 2026"}
+  - id: L02
+    cat: lookup
+    q: Which ceramics studio does Mara use to fire her pottery?
+    a: ["Savi"]
+    gold: {projects/glaze.md: "Mara fires her work at the shared ceramics studio Savi run by Anu Põld in Telliskivi; she pays a monthly membership"}
+  - id: L03
+    cat: lookup
+    q: What race is Mara training for, and on what date is it?
+    a: ["Tallinn Marathon", "September 6|6 September|2026-09-06|Sept 6|Sep 6"]
+    gold: {projects/marathon.md: "Goal race: Tallinn Marathon on 2026-09-06, target under 4 hours"}
+  - id: L04
+    cat: lookup
+    q: Who is the CTO at Kestrel Freight?
+    a: ["Tomasz Wójcik|Tomasz Wojcik"]
+    gold: {people/tomasz-wojcik.md: "Tomasz Wójcik, CTO of Kestrel Freight, signs off on Harbor architecture decisions"}
+  - id: L05
+    cat: lookup
+    q: What frontend framework did Mara pick for the Harbor dashboard?
+    a: ["SvelteKit"]
+    gold: {projects/harbor/2026-04-14-stack-decision.md: "Decided on SvelteKit for the Harbor frontend (team is small, Priya liked the prototype speed); backend stays on FastAPI"}
+  - id: L06
+    cat: lookup
+    q: What is the target finish time for Mara's marathon?
+    a: ["4 hours|4:00|sub-4|four hours|under 4"]
+    gold: {projects/marathon.md: "target under 4 hours"}
+  - id: L07
+    cat: lookup
+    q: Which neighbourhood of Tallinn does Mara live in?
+    a: ["Kalamaja"]
+    gold: {people/mart-rebane.md: "Landlord of the Kalamaja flat (Vabriku street)"}
+  - id: L08
+    cat: lookup
+    q: What does John Kask do for a living?
+    a: ["bike shop|bicycle shop"]
+    gold: {people/john-kask.md: "University friend; runs a bike shop in Tartu called Ratas"}
+  - id: L09
+    cat: lookup
+    q: Where does Mara's sister Elin live?
+    a: ["Narva"]
+    gold: {people/elin-lindqvist.md: "Younger sister, lives in Narva, works as a nurse at the city hospital"}
+  - id: L10
+    cat: lookup
+    q: What kind of visa is Mara applying for to move to Portugal?
+    a: ["D8|digital nomad"]
+    gold: {projects/lisbon.md: "Route: Portuguese D8 digital nomad visa (remote-work income route)"}
+  - id: L11
+    cat: lookup
+    q: Who is Mara's relocation agent in Lisbon?
+    a: ["Rui Mendes"]
+    gold: {people/rui-mendes.md: "Relocation agent in Lisbon, helps with NIF, bank account and flat viewings; fixed fee package"}
+  - id: L12
+    cat: lookup
+    q: What glaze colour did Mara's best-selling mug line use?
+    a: ["celadon"]
+    gold: {projects/glaze/2026-07-20-sales-review.md: "Best seller this quarter: the celadon 'Harbour mug' line, 23 sold"}
+  - id: L13
+    cat: lookup
+    q: How many 'Harbour mugs' were sold in the quarter reviewed in July?
+    a: ["23"]
+    gold: {projects/glaze/2026-07-20-sales-review.md: "23 sold"}
+  - id: L14
+    cat: lookup
+    q: Who coaches Mara's running club?
+    a: ["Viktor Volkov"]
+    gold: {people/viktor-volkov.md: "Coach of the Kalamaja Runners club, Tuesday and Thursday group sessions"}
+
+  # ---------------- paraphrase (question words differ from note words) ----------------
+  - id: P01
+    cat: paraphrase
+    q: When is Mara's next eye doctor appointment?
+    a: ["October 14|14 October|2026-10-14|Oct 14"]
+    gold: {health/2026-09-02-ophthalmologist.md: "Booked follow-up with Dr. Peeter Mänd (ophthalmologist) for 2026-10-14 at 09:30, dilated fundus exam, no driving after"}
+  - id: P02
+    cat: paraphrase
+    q: Who helps Mara with her bookkeeping and tax returns?
+    a: ["Kadri Tamm"]
+    gold: {people/kadri-tamm.md: "Accountant; handles quarterly VAT and the annual income declaration for the sole-proprietor (FIE) setup"}
+  - id: P03
+    cat: paraphrase
+    q: What injury slowed down Mara's training in the summer?
+    a: ["IT band|iliotibial|ITB"]
+    gold: {health/2026-06-18-physio.md: "Liis says it's iliotibial band syndrome on the right knee; two weeks of reduced mileage, foam roller, hip strength work"}
+  - id: P04
+    cat: paraphrase
+    q: Which cloud provider hosts the Harbor app?
+    a: ["Hetzner"]
+    gold: {projects/harbor/2026-05-05-infra.md: "Production runs on a Hetzner dedicated box in Falkenstein; staging on a small Hetzner Cloud VM"}
+  - id: P05
+    cat: paraphrase
+    q: How does Mara get paid by online customers of her pottery shop?
+    a: ["Stripe"]
+    gold: {projects/glaze/2026-04-22-shop-setup.md: "Checkout through Stripe; shop built on a simple static site, orders land in a Notion-free spreadsheet"}
+  - id: P06
+    cat: paraphrase
+    q: What was the advice Mara's mentor gave about raising her rate?
+    a: ["value|outcome"]
+    gold: {meetings/2026-06-03-oskar-mentoring.md: "Oskar: stop pricing by the hour in conversations, anchor on the value of the outcome (fewer lost shipments), then quote; raise by at least 10% at renewal"}
+  - id: P07
+    cat: paraphrase
+    q: Who is the person Mara knows in Lisbon through her tutor?
+    a: ["Marta Sousa"]
+    gold: {people/marta-sousa.md: "Friend of Inês; community manager at a co-working space in Arroios; offered to show Mara around"}
+  - id: P08
+    cat: paraphrase
+    q: Why did Mara stop using the kiln at home idea?
+    a: ["electric|wiring|fuse|power"]
+    gold: {projects/glaze/2026-05-12-kiln-thoughts.md: "Home kiln is out: the flat's wiring can't take a 16A kiln and Rebane won't allow electrical work; keep firing at Savi"}
+
+  # ---------------- temporal / superseded ----------------
+  - id: T01
+    cat: temporal
+    q: What is Mara's current hourly rate on the Harbor contract?
+    a: ["95"]
+    gold: {projects/harbor/2026-07-01-contract-renewal.md: "Renewed with Kestrel from July 1: rate goes from €85/h to €95/h, 3-month term"}
+    distractors: {projects/harbor.md: "Contract: €85/h, started April 2026 (older section, may say initial terms)"}
+  - id: T02
+    cat: temporal
+    q: When is Mara's dentist appointment?
+    a: ["October 8|8 October|2026-10-08|Oct 8"]
+    gold: {health/2026-09-21-dentist-moved.md: "Dr. Saar's clinic called: appointment moved again, now 2026-10-08 at 16:00"}
+    distractors:
+      health/2026-08-10-dentist.md: "Booked a check-up with Dr. Helen Saar for 2026-09-17 at 10:00"
+      inbox/2026-09-12-0815-voice.md: "voice memo: dentist moved to September 29 (later superseded)"
+  - id: T03
+    cat: temporal
+    q: Which flat in Lisbon did Mara finally choose?
+    a: ["Arroios"]
+    gold: {projects/lisbon/2026-09-15-flat-decision.md: "Signed for the Arroios flat (Rua Morais Soares, 2 rooms, €1,350/month) starting 2027-01-15; dropped the Graça one because of the stairs and no lift"}
+    distractors: {projects/lisbon/2026-08-28-viewings.md: "Leaning towards the Graça flat (great view, €1,250)"}
+  - id: T04
+    cat: temporal
+    q: What is the current plan for Mara's move date to Lisbon?
+    a: ["January 2027|2027-01|mid-January|January 15"]
+    gold: {projects/lisbon/2026-09-15-flat-decision.md: "Move date set to mid-January 2027 (lease starts 2027-01-15)"}
+    distractors: {projects/lisbon.md: "Original plan from April: move in November 2026 (now outdated)"}
+  - id: T05
+    cat: temporal
+    q: Which accounting software does Mara use now for her invoices?
+    a: ["Merit"]
+    gold: {money/2026-08-04-switch-invoicing.md: "Switched invoicing from Invoice Ninja to Merit Aktiva because Kadri can access it directly"}
+    distractors: {money/2026-04-10-invoicing-setup.md: "Set up Invoice Ninja (self-hosted) for invoices"}
+  - id: T06
+    cat: temporal
+    q: Is the Harbor contract still active, and until when?
+    a: ["December 31|2026-12-31|end of December|31 December|Dec 31"]
+    gold: {projects/harbor/2026-09-24-extension.md: "Kestrel extended Harbor again until 2026-12-31 at the same €95/h; scope: carrier API integrations"}
+    distractors: {projects/harbor/2026-07-01-contract-renewal.md: "3-month term until 2026-09-30"}
+  - id: T07
+    cat: temporal
+    q: What day are the Portuguese lessons now?
+    a: ["Monday"]
+    gold: {projects/portuguese/2026-08-25-schedule-change.md: "Inês moved our lessons from Thursdays to Mondays 19:00 Lisbon time from September"}
+    distractors: {people/ines-carvalho.md: "Lessons on Thursdays at 18:00 (original schedule)"}
+  - id: T08
+    cat: temporal
+    q: What was Mara's official marathon finish time?
+    a: ["4:07|4h07|4:07:"]
+    gold: {projects/marathon/2026-09-06-race-day.md: "Official time 4:07:31. Missed sub-4; walked twice after km 33 (calf cramps)"}
+    distractors: {journal/2026-09-05.md: "Predicting 3:55 if the weather holds"}
+  - id: T09
+    cat: temporal
+    q: How much does Mara currently pay for the Savi studio membership?
+    a: ["65"]
+    gold: {money/subscriptions.md: "Savi studio membership €65/month (raised from €55 in August)"}
+    distractors: {projects/glaze.md: "membership €55/month (spring)"}
+  - id: T10
+    cat: temporal
+    q: Which Portuguese exam level is Mara aiming for now?
+    a: ["B1"]
+    gold: {projects/portuguese/2026-09-10-exam-plan.md: "Inês thinks A2 is too easy now; aiming for CIPLE skipped, going for DEPLE (B1) in May 2027"}
+    distractors: {projects/portuguese.md: "Goal: CIPLE (A2) exam in November 2026"}
+
+  # ---------------- identifiers (exact strings; keyword search should shine) ----------------
+  - id: I01
+    cat: identifier
+    q: What was invoice INV-2026-014 for, and how much was it?
+    a: ["4[ ,.]?250|4250", "May|Harbor"]
+    gold: {money/invoices/INV-2026-014.md: "INV-2026-014 to Kestrel Freight OÜ: Harbor development, May 2026, 50 hours x €85 = €4,250"}
+    distractors: {money/invoices/INV-2026-041.md: "INV-2026-041: Glaze wholesale order to a Tartu café, €410"}
+  - id: I02
+    cat: identifier
+    q: What is the booking reference of Mara's flight to Lisbon in October?
+    a: ["K7QZ2M"]
+    gold: {mail/2026-09-18-flight-booking.md: "TAP booking K7QZ2M, TLL->LIS via FRA on 2026-10-20, return 2026-10-27; seat 14A"}
+  - id: I03
+    cat: identifier
+    q: What does the Harbor ticket HRB-212 cover?
+    a: ["Maersk|carrier", "webhook|tracking events"]
+    gold: {projects/harbor/2026-09-26-sprint.md: "HRB-212: ingest Maersk tracking events via webhook instead of polling; Tomasz wants it before the December demo"}
+    distractors: {projects/harbor/2026-09-12-sprint.md: "HRB-121: fix timezone bug in ETA column"}
+  - id: I04
+    cat: identifier
+    q: What is Mara's Portuguese tax number (NIF) status?
+    a: ["issued|received|got"]
+    gold: {projects/lisbon/2026-07-08-nif.md: "NIF issued through Rui (fiscal representative), number stored in the password manager, not in notes"}
+  - id: I05
+    cat: identifier
+    q: Which Stripe payout ID failed in August and why?
+    a: ["po_1Q8xK2", "IBAN|bank details|account"]
+    gold: {mail/2026-08-14-stripe-payout-failed.md: "Payout po_1Q8xK2 failed: bank rejected because the IBAN on file was the old LHV account; updated to Wise"}
+  - id: I06
+    cat: identifier
+    q: What is the order number of the kiln shelves Mara ordered for Savi?
+    a: ["SKL-88412"]
+    gold: {mail/2026-06-09-kiln-shelves-order.md: "Order SKL-88412 from a Riga ceramics supplier: 2 silicon carbide shelves, €212, delivered to Savi"}
+
+  # ---------------- aggregate (needs several notes) ----------------
+  - id: A01
+    cat: aggregate
+    q: Which of Mara's subscriptions renew in October 2026?
+    a: ["Figma", "1Password", "Strava"]
+    gold:
+      money/subscriptions.md: "list incl. Figma Professional renews 2026-10-03 (€15/mo annual), 1Password renews 2026-10-19, Strava renews 2026-10-27, Duolingo renews 2027-02-01, Savi monthly"
+  - id: A02
+    cat: aggregate
+    q: How many invoices did Mara send to Kestrel Freight between April and September, roughly what total?
+    a: ["6|six"]
+    gold:
+      money/invoices/INV-2026-009.md: "April Harbor invoice, 40h x €85 = €3,400"
+      money/invoices/INV-2026-014.md: "May"
+      money/invoices/INV-2026-019.md: "June, 52h x €85 = €4,420"
+      money/invoices/INV-2026-025.md: "July, 48h x €95 = €4,560"
+      money/invoices/INV-2026-031.md: "August, 30h x €95 = €2,850 (holiday month)"
+      money/invoices/INV-2026-037.md: "September, 55h x €95 = €5,225"
+  - id: A03
+    cat: aggregate
+    q: Which open tasks are due in the first half of October 2026?
+    a: ["VAT|käibemaks", "passport", "glaze order|Christmas"]
+    gold:
+      tasks/2026-09-20-vat-q3.md: "Send Q3 VAT data to Kadri, due 2026-10-10, open"
+      tasks/2026-09-05-passport-renewal.md: "Renew Estonian passport before Lisbon trip, due 2026-10-12, open"
+      tasks/2026-09-22-christmas-glaze-batch.md: "Fire the Christmas mug batch at Savi, due 2026-10-15, open"
+    distractors:
+      tasks/2026-09-01-physio-followup.md: "physio follow-up, due 2026-10-05, status done"
+  - id: A04
+    cat: aggregate
+    q: Which people did Mara meet in person during her June trip to Lisbon?
+    a: ["Rui", "Marta", "Inês|Ines"]
+    gold:
+      projects/lisbon/2026-06-22-trip-notes.md: "Lisbon trip June 19-24: met Rui (viewed 3 flats), coffee with Marta at the co-working space, first in-person lesson with Inês"
+
+  # ---------------- cross-lingual (note in Russian, question in English or vice versa) ----------------
+  - id: X01
+    cat: crosslingual
+    q: What did Elin ask Mara to bring when visiting Narva in August?
+    a: ["coffee grinder|кофемолк", "Stockmann|Стокман"]
+    gold: {mail/2026-08-02-elin.md: "IN RUSSIAN: Элин просит привезти кофемолку из Стокмана и лекарства для мамы"}
+  - id: X02
+    cat: crosslingual
+    q: What is the reason Mara's mother needs to see a cardiologist?
+    a: ["pressure|давлен|hypertension"]
+    gold: {inbox/2026-08-11-2140-voice.md: "IN RUSSIAN voice memo: маме надо к кардиологу, давление скачет, Элин записала на 25 августа"}
+  - id: X03
+    cat: crosslingual
+    q: When is Mara's mother's cardiologist appointment?
+    a: ["August 25|25 August|2026-08-25|25 авг"]
+    gold: {inbox/2026-08-11-2140-voice.md: "Элин записала на 25 августа"}
+  - id: X04
+    cat: crosslingual
+    q: Что Мара решила насчёт курса по дизайн-системам? (What did Mara decide about the design systems course?)
+    a: ["skip|not now|postpone|later|пропуст|отлож|не в этом году|отказ"]
+    gold: {journal/2026-07-14.md: "Decided to skip the €600 design-systems course for now; spend that on the Lisbon deposit instead"}
+  - id: X05
+    cat: crosslingual
+    q: Сколько стоит квартира в Арройуше в месяц?
+    a: ["1[ ,.]?350"]
+    gold: {projects/lisbon/2026-09-15-flat-decision.md: "€1,350/month"}
+  - id: X06
+    cat: crosslingual
+    q: What gift idea did Mara note for Elin's birthday?
+    a: ["e-reader|Kindle|электронн"]
+    gold: {inbox/2026-09-03-0910-voice.md: "IN RUSSIAN: Элин на день рождения — электронную книгу, она жаловалась, что глаза устают от телефона"}
+
+  # ---------------- multi-hop ----------------
+  - id: M01
+    cat: multihop
+    q: Where does the person who recommended Mara's accountant work?
+    a: ["Berlin|startup"]
+    gold:
+      people/kadri-tamm.md: "Recommended by Hanna Kuusk"
+      people/hanna-kuusk.md: "Ex-colleague, now recruiter at a Berlin logistics startup"
+  - id: M02
+    cat: multihop
+    q: In which city is the bike shop of the friend who paced Mara at the marathon?
+    a: ["Tartu"]
+    gold:
+      projects/marathon/2026-09-06-race-day.md: "John Kask paced me from km 25 to 35"
+      people/john-kask.md: "runs a bike shop in Tartu"
+  - id: M03
+    cat: multihop
+    q: What is the name of the co-working space where the friend of Mara's tutor works?
+    a: ["Casa Arroios"]
+    gold:
+      people/marta-sousa.md: "community manager at the co-working space 'Casa Arroios'"
+
+  # ---------------- unanswerable (must NOT be in the corpus) ----------------
+  - id: U01
+    cat: unanswerable
+    q: What is Mara's blood type?
+  - id: U02
+    cat: unanswerable
+    q: How much did Mara pay for her marathon registration?
+  - id: U03
+    cat: unanswerable
+    q: What is Tomasz Wójcik's phone number?
+  - id: U04
+    cat: unanswerable
+    q: Which airline did Mara fly with on her June trip to Lisbon?
+  - id: U05
+    cat: unanswerable
+    q: What is the name of Mara's cat?
+  - id: U06
+    cat: unanswerable
+    q: When does the Arroios flat lease end?
+  - id: U07
+    cat: unanswerable
+    q: What grade did Mara get in her Portuguese placement test?
+  - id: U08
+    cat: unanswerable
+    q: How much did the Hetzner production server cost per month?
+
+# Things filler notes must never mention (keeps unanswerables unanswerable and golds unique).
+forbidden:
+  - blood type
+  - marathon registration fee or price
+  - any phone number of anyone
+  - the airline of the June Lisbon trip (just say "flew to Lisbon")
+  - any pet
+  - lease end date or lease length of the Arroios flat
+  - Portuguese placement test results
+  - price of Hetzner servers
+  - any other invoice numbers than INV-2026-009/014/019/025/031/037/041
+  - any other booking references
+  - any second dentist or ophthalmologist appointment date not listed in facts
+  - any contract rate other than €85 (Apr–Jun) and €95 (from July)

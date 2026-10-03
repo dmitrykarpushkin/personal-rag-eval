@@ -1,0 +1,134 @@
+{
+ "people/tomasz-wojcik.md": [
+  {
+   "fact": "L04",
+   "role": "gold",
+   "must_contain": "Tomasz Wójcik, CTO of Kestrel Freight, signs off on Harbor architecture decisions",
+   "question": "Who is the CTO at Kestrel Freight?"
+  }
+ ],
+ "projects/harbor/2026-04-14-stack-decision.md": [
+  {
+   "fact": "L05",
+   "role": "gold",
+   "must_contain": "Decided on SvelteKit for the Harbor frontend (team is small, Priya liked the prototype speed); backend stays on FastAPI",
+   "question": "What frontend framework did Mara pick for the Harbor dashboard?"
+  }
+ ],
+ "projects/harbor/2026-05-05-infra.md": [
+  {
+   "fact": "P04",
+   "role": "gold",
+   "must_contain": "Production runs on a Hetzner dedicated box in Falkenstein; staging on a small Hetzner Cloud VM",
+   "question": "Which cloud provider hosts the Harbor app?"
+  }
+ ],
+ "projects/harbor/2026-07-01-contract-renewal.md": [
+  {
+   "fact": "T01",
+   "role": "gold",
+   "must_contain": "Renewed with Kestrel from July 1: rate goes from €85/h to €95/h, 3-month term",
+   "question": "What is Mara's current hourly rate on the Harbor contract?"
+  },
+  {
+   "fact": "T06",
+   "role": "distractors",
+   "must_contain": "3-month term until 2026-09-30",
+   "question": "Is the Harbor contract still active, and until when?"
+  }
+ ],
+ "projects/harbor.md": [
+  {
+   "fact": "T01",
+   "role": "distractors",
+   "must_contain": "Contract: €85/h, started April 2026 (older section, may say initial terms)",
+   "question": "What is Mara's current hourly rate on the Harbor contract?"
+  }
+ ],
+ "projects/harbor/2026-09-24-extension.md": [
+  {
+   "fact": "T06",
+   "role": "gold",
+   "must_contain": "Kestrel extended Harbor again until 2026-12-31 at the same €95/h; scope: carrier API integrations",
+   "question": "Is the Harbor contract still active, and until when?"
+  }
+ ],
+ "money/invoices/INV-2026-014.md": [
+  {
+   "fact": "I01",
+   "role": "gold",
+   "must_contain": "INV-2026-014 to Kestrel Freight OÜ: Harbor development, May 2026, 50 hours x €85 = €4,250",
+   "question": "What was invoice INV-2026-014 for, and how much was it?"
+  },
+  {
+   "fact": "A02",
+   "role": "gold",
+   "must_contain": "May",
+   "question": "How many invoices did Mara send to Kestrel Freight between April and September, roughly what total?"
+  }
+ ],
+ "money/invoices/INV-2026-041.md": [
+  {
+   "fact": "I01",
+   "role": "distractors",
+   "must_contain": "INV-2026-041: Glaze wholesale order to a Tartu café, €410",
+   "question": "What was invoice INV-2026-014 for, and how much was it?"
+  }
+ ],
+ "projects/harbor/2026-09-26-sprint.md": [
+  {
+   "fact": "I03",
+   "role": "gold",
+   "must_contain": "HRB-212: ingest Maersk tracking events via webhook instead of polling; Tomasz wants it before the December demo",
+   "question": "What does the Harbor ticket HRB-212 cover?"
+  }
+ ],
+ "projects/harbor/2026-09-12-sprint.md": [
+  {
+   "fact": "I03",
+   "role": "distractors",
+   "must_contain": "HRB-121: fix timezone bug in ETA column",
+   "question": "What does the Harbor ticket HRB-212 cover?"
+  }
+ ],
+ "money/invoices/INV-2026-009.md": [
+  {
+   "fact": "A02",
+   "role": "gold",
+   "must_contain": "April Harbor invoice, 40h x €85 = €3,400",
+   "question": "How many invoices did Mara send to Kestrel Freight between April and September, roughly what total?"
+  }
+ ],
+ "money/invoices/INV-2026-019.md": [
+  {
+   "fact": "A02",
+   "role": "gold",
+   "must_contain": "June, 52h x €85 = €4,420",
+   "question": "How many invoices did Mara send to Kestrel Freight between April and September, roughly what total?"
+  }
+ ],
+ "money/invoices/INV-2026-025.md": [
+  {
+   "fact": "A02",
+   "role": "gold",
+   "must_contain": "July, 48h x €95 = €4,560",
+   "question": "How many invoices did Mara send to Kestrel Freight between April and September, roughly what total?"
+  }
+ ],
+ "money/invoices/INV-2026-031.md": [
+  {
+   "fact": "A02",
+   "role": "gold",
+   "must_contain": "August, 30h x €95 = €2,850 (holiday month)",
+   "question": "How many invoices did Mara send to Kestrel Freight between April and September, roughly what total?"
+  }
+ ],
+ "money/invoices/INV-2026-037.md": [
+  {
+   "fact": "A02",
+   "role": "gold",
+   "must_contain": "September, 55h x €95 = €5,225",
+   "question": "How many invoices did Mara send to Kestrel Freight between April and September, roughly what total?"
+  }
+ ]
+}

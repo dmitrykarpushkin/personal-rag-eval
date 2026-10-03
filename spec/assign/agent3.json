@@ -1,0 +1,128 @@
+{
+ "people/ines-carvalho.md": [
+  {
+   "fact": "L01",
+   "role": "gold",
+   "must_contain": "Inês Carvalho, Portuguese tutor, lessons over Zoom; met through a Lisbon expat forum in April 2026",
+   "question": "What is the name of Mara's Portuguese tutor?"
+  },
+  {
+   "fact": "T07",
+   "role": "distractors",
+   "must_contain": "Lessons on Thursdays at 18:00 (original schedule)",
+   "question": "What day are the Portuguese lessons now?"
+  }
+ ],
+ "projects/lisbon.md": [
+  {
+   "fact": "L10",
+   "role": "gold",
+   "must_contain": "Route: Portuguese D8 digital nomad visa (remote-work income route)",
+   "question": "What kind of visa is Mara applying for to move to Portugal?"
+  },
+  {
+   "fact": "T04",
+   "role": "distractors",
+   "must_contain": "Original plan from April: move in November 2026 (now outdated)",
+   "question": "What is the current plan for Mara's move date to Lisbon?"
+  }
+ ],
+ "people/rui-mendes.md": [
+  {
+   "fact": "L11",
+   "role": "gold",
+   "must_contain": "Relocation agent in Lisbon, helps with NIF, bank account and flat viewings; fixed fee package",
+   "question": "Who is Mara's relocation agent in Lisbon?"
+  }
+ ],
+ "people/marta-sousa.md": [
+  {
+   "fact": "P07",
+   "role": "gold",
+   "must_contain": "Friend of Inês; community manager at a co-working space in Arroios; offered to show Mara around",
+   "question": "Who is the person Mara knows in Lisbon through her tutor?"
+  },
+  {
+   "fact": "M03",
+   "role": "gold",
+   "must_contain": "community manager at the co-working space 'Casa Arroios'",
+   "question": "What is the name of the co-working space where the friend of Mara's tutor works?"
+  }
+ ],
+ "projects/lisbon/2026-09-15-flat-decision.md": [
+  {
+   "fact": "T03",
+   "role": "gold",
+   "must_contain": "Signed for the Arroios flat (Rua Morais Soares, 2 rooms, €1,350/month) starting 2027-01-15; dropped the Graça one because of the stairs and no lift",
+   "question": "Which flat in Lisbon did Mara finally choose?"
+  },
+  {
+   "fact": "T04",
+   "role": "gold",
+   "must_contain": "Move date set to mid-January 2027 (lease starts 2027-01-15)",
+   "question": "What is the current plan for Mara's move date to Lisbon?"
+  },
+  {
+   "fact": "X05",
+   "role": "gold",
+   "must_contain": "€1,350/month",
+   "question": "Сколько стоит квартира в Арройуше в месяц?"
+  }
+ ],
+ "projects/lisbon/2026-08-28-viewings.md": [
+  {
+   "fact": "T03",
+   "role": "distractors",
+   "must_contain": "Leaning towards the Graça flat (great view, €1,250)",
+   "question": "Which flat in Lisbon did Mara finally choose?"
+  }
+ ],
+ "projects/portuguese/2026-08-25-schedule-change.md": [
+  {
+   "fact": "T07",
+   "role": "gold",
+   "must_contain": "Inês moved our lessons from Thursdays to Mondays 19:00 Lisbon time from September",
+   "question": "What day are the Portuguese lessons now?"
+  }
+ ],
+ "projects/portuguese/2026-09-10-exam-plan.md": [
+  {
+   "fact": "T10",
+   "role": "gold",
+   "must_contain": "Inês thinks A2 is too easy now; aiming for CIPLE skipped, going for DEPLE (B1) in May 2027",
+   "question": "Which Portuguese exam level is Mara aiming for now?"
+  }
+ ],
+ "projects/portuguese.md": [
+  {
+   "fact": "T10",
+   "role": "distractors",
+   "must_contain": "Goal: CIPLE (A2) exam in November 2026",
+   "question": "Which Portuguese exam level is Mara aiming for now?"
+  }
+ ],
+ "mail/2026-09-18-flight-booking.md": [
+  {
+   "fact": "I02",
+   "role": "gold",
+   "must_contain": "TAP booking K7QZ2M, TLL->LIS via FRA on 2026-10-20, return 2026-10-27; seat 14A",
+   "question": "What is the booking reference of Mara's flight to Lisbon in October?"
+  }
+ ],
+ "projects/lisbon/2026-07-08-nif.md": [
+  {
+   "fact": "I04",
+   "role": "gold",
+   "must_contain": "NIF issued through Rui (fiscal representative), number stored in the password manager, not in notes",
+   "question": "What is Mara's Portuguese tax number (NIF) status?"
+  }
+ ],
+ "projects/lisbon/2026-06-22-trip-notes.md": [
+  {
+   "fact": "A04",
+   "role": "gold",
+   "must_contain": "Lisbon trip June 19-24: met Rui (viewed 3 flats), coffee with Marta at the co-working space, first in-person lesson with Inês",
+   "question": "Which people did Mara meet in person during her June trip to Lisbon?"
+  }
+ ]
+}

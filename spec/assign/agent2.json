@@ -1,0 +1,144 @@
+{
+ "projects/glaze.md": [
+  {
+   "fact": "L02",
+   "role": "gold",
+   "must_contain": "Mara fires her work at the shared ceramics studio Savi run by Anu Põld in Telliskivi; she pays a monthly membership",
+   "question": "Which ceramics studio does Mara use to fire her pottery?"
+  },
+  {
+   "fact": "T09",
+   "role": "distractors",
+   "must_contain": "membership €55/month (spring)",
+   "question": "How much does Mara currently pay for the Savi studio membership?"
+  }
+ ],
+ "projects/marathon.md": [
+  {
+   "fact": "L03",
+   "role": "gold",
+   "must_contain": "Goal race: Tallinn Marathon on 2026-09-06, target under 4 hours",
+   "question": "What race is Mara training for, and on what date is it?"
+  },
+  {
+   "fact": "L06",
+   "role": "gold",
+   "must_contain": "target under 4 hours",
+   "question": "What is the target finish time for Mara's marathon?"
+  }
+ ],
+ "people/john-kask.md": [
+  {
+   "fact": "L08",
+   "role": "gold",
+   "must_contain": "University friend; runs a bike shop in Tartu called Ratas",
+   "question": "What does John Kask do for a living?"
+  },
+  {
+   "fact": "M02",
+   "role": "gold",
+   "must_contain": "runs a bike shop in Tartu",
+   "question": "In which city is the bike shop of the friend who paced Mara at the marathon?"
+  }
+ ],
+ "projects/glaze/2026-07-20-sales-review.md": [
+  {
+   "fact": "L12",
+   "role": "gold",
+   "must_contain": "Best seller this quarter: the celadon 'Harbour mug' line, 23 sold",
+   "question": "What glaze colour did Mara's best-selling mug line use?"
+  },
+  {
+   "fact": "L13",
+   "role": "gold",
+   "must_contain": "23 sold",
+   "question": "How many 'Harbour mugs' were sold in the quarter reviewed in July?"
+  }
+ ],
+ "people/viktor-volkov.md": [
+  {
+   "fact": "L14",
+   "role": "gold",
+   "must_contain": "Coach of the Kalamaja Runners club, Tuesday and Thursday group sessions",
+   "question": "Who coaches Mara's running club?"
+  }
+ ],
+ "health/2026-09-02-ophthalmologist.md": [
+  {
+   "fact": "P01",
+   "role": "gold",
+   "must_contain": "Booked follow-up with Dr. Peeter Mänd (ophthalmologist) for 2026-10-14 at 09:30, dilated fundus exam, no driving after",
+   "question": "When is Mara's next eye doctor appointment?"
+  }
+ ],
+ "health/2026-06-18-physio.md": [
+  {
+   "fact": "P03",
+   "role": "gold",
+   "must_contain": "Liis says it's iliotibial band syndrome on the right knee; two weeks of reduced mileage, foam roller, hip strength work",
+   "question": "What injury slowed down Mara's training in the summer?"
+  }
+ ],
+ "projects/glaze/2026-04-22-shop-setup.md": [
+  {
+   "fact": "P05",
+   "role": "gold",
+   "must_contain": "Checkout through Stripe; shop built on a simple static site, orders land in a Notion-free spreadsheet",
+   "question": "How does Mara get paid by online customers of her pottery shop?"
+  }
+ ],
+ "projects/glaze/2026-05-12-kiln-thoughts.md": [
+  {
+   "fact": "P08",
+   "role": "gold",
+   "must_contain": "Home kiln is out: the flat's wiring can't take a 16A kiln and Rebane won't allow electrical work; keep firing at Savi",
+   "question": "Why did Mara stop using the kiln at home idea?"
+  }
+ ],
+ "health/2026-09-21-dentist-moved.md": [
+  {
+   "fact": "T02",
+   "role": "gold",
+   "must_contain": "Dr. Saar's clinic called: appointment moved again, now 2026-10-08 at 16:00",
+   "question": "When is Mara's dentist appointment?"
+  }
+ ],
+ "health/2026-08-10-dentist.md": [
+  {
+   "fact": "T02",
+   "role": "distractors",
+   "must_contain": "Booked a check-up with Dr. Helen Saar for 2026-09-17 at 10:00",
+   "question": "When is Mara's dentist appointment?"
+  }
+ ],
+ "projects/marathon/2026-09-06-race-day.md": [
+  {
+   "fact": "T08",
+   "role": "gold",
+   "must_contain": "Official time 4:07:31. Missed sub-4; walked twice after km 33 (calf cramps)",
+   "question": "What was Mara's official marathon finish time?"
+  },
+  {
+   "fact": "M02",
+   "role": "gold",
+   "must_contain": "John Kask paced me from km 25 to 35",
+   "question": "In which city is the bike shop of the friend who paced Mara at the marathon?"
+  }
+ ],
+ "mail/2026-08-14-stripe-payout-failed.md": [
+  {
+   "fact": "I05",
+   "role": "gold",
+   "must_contain": "Payout po_1Q8xK2 failed: bank rejected because the IBAN on file was the old LHV account; updated to Wise",
+   "question": "Which Stripe payout ID failed in August and why?"
+  }
+ ],
+ "mail/2026-06-09-kiln-shelves-order.md": [
+  {
+   "fact": "I06",
+   "role": "gold",
+   "must_contain": "Order SKL-88412 from a Riga ceramics supplier: 2 silicon carbide shelves, €212, delivered to Savi",
+   "question": "What is the order number of the kiln shelves Mara ordered for Savi?"
+  }
+ ]
+}
