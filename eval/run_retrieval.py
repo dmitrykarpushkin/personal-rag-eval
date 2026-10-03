@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CORPUS = Path(os.environ.get("PRAG_CORPUS", ROOT / "corpus")).resolve()
 TAG = os.environ.get("PRAG_TAG", "")  # results suffix, e.g. "-xl"
 sys.path.insert(0, str(ROOT / "src"))
-from prag import retrieve, store  # noqa: E402
+from stats import bootstrap_ci, fmt_ci  # noqa: E402
 
 SYSTEMS = ["grep", "lexical", "dense", "hybrid-rrf", "hybrid", "hybrid+rerank"]
 
@@ -32,6 +32,8 @@ def load_gold():
 
 
 def main():
+    from prag import retrieve, store
+
     qs = [q for q in load_gold() if q["answerable"]]
     conn = store.connect()
     retrieve.dense(conn, "warm up", 1)  # load the embedding model outside the timings
@@ -62,12 +64,14 @@ def summarize(rows, out):
     by = defaultdict(list)
     for r in rows:
         by[r["system"]].append(r)
-    lines = ["| retriever | hit@1 | hit@5 | recall@5 | recall@10 | MRR | median ms |", "|---|---|---|---|---|---|---|"]
+    lines = ["| retriever | hit@1 | hit@5, 95% CI | recall@5 | recall@10 | MRR, 95% CI | median ms |",
+             "|---|---|---|---|---|---|---|"]
     for s in SYSTEMS:
         rs = by[s]
         m = lambda k: st.mean(float(r[k]) for r in rs)  # noqa: E731
-        lines.append(f"| {s} | {m('hit@1'):.2f} | {m('hit@5'):.2f} | {m('recall@5'):.2f} | {m('recall@10'):.2f} | "
-                     f"{m('mrr'):.2f} | {st.median(r['ms'] for r in rs):.0f} |")
+        ci = lambda k: fmt_ci(*bootstrap_ci([r[k] for r in rs]))  # noqa: E731
+        lines.append(f"| {s} | {m('hit@1'):.2f} | {ci('hit@5')} | {m('recall@5'):.2f} | {m('recall@10'):.2f} | "
+                     f"{ci('mrr')} | {st.median(r['ms'] for r in rs):.0f} |")
     cats = sorted({r["category"] for r in rows})
     lines += ["", "hit@5 by question type:", "",
               "| retriever | " + " | ".join(f"{c} (n={len([r for r in by[SYSTEMS[0]] if r['category']==c])})" for c in cats) + " |",
@@ -83,4 +87,8 @@ def summarize(rows, out):
 
 
 if __name__ == "__main__":
-    main()
+    if "--summary-only" in sys.argv:  # rebuild the Markdown from the saved rows, no database or models
+        out = ROOT / "eval/results"
+        summarize([json.loads(line) for line in (out / f"retrieval{TAG}.jsonl").open()], out)
+    else:
+        main()
