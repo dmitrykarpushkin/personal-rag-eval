@@ -42,10 +42,16 @@ Reply with one JSON object and nothing else:
 {{"answer": "<short answer with the key facts, in English; in Russian only if the question is in Russian>", "sources": ["<note path>", ...]}}"""
 
 
+MCP_URL = os.environ.get("PRAG_MCP_URL", "http://127.0.0.1:8765/mcp")
+
+
 def claude(prompt: str, system: str, tools: str = "", cwd: str = "/tmp", max_turns: int | None = None,
-           system_file: str | None = None, model: str = MODEL) -> dict:
+           system_file: str | None = None, model: str = MODEL, mcp: bool = False) -> dict:
     cmd = ["claude", "-p", "--model", model, "--tools", tools, "--strict-mcp-config", "--setting-sources", "",
            "--no-session-persistence", "--output-format", "json"]
+    if mcp:
+        cmd += ["--mcp-config", json.dumps({"mcpServers": {"notes": {"type": "http", "url": MCP_URL}}})]
+        tools = ",".join(t for t in [tools, "mcp__notes__search_notes"] if t)
     cmd += ["--system-prompt-file", system_file] if system_file else ["--system-prompt", system]
     if max_turns:
         cmd += ["--max-turns", str(max_turns)]
@@ -112,6 +118,11 @@ def prepare(system: str, q: dict, conn, corpus_text: str) -> dict:
         return {"prompt": f"The notes are markdown files in the current folder. Search them with your tools.\n\n"
                           f"Question: {question}", "tools": "Grep,Glob,Read", "cwd": str(CORPUS),
                 "max_turns": 20}
+    if system == "agent+search":
+        return {"prompt": f"The notes are markdown files in the current folder. You have a search_notes tool "
+                          f"(semantic + keyword search over all notes) and Grep/Glob/Read.\n\n"
+                          f"Question: {question}", "tools": "Grep,Glob,Read", "cwd": str(CORPUS),
+                "max_turns": 20, "mcp": True}
     if system == "full-context":
         # The notebook goes into the system prompt so prompt caching kicks in after the first question.
         # Instructions are repeated after the notes: smaller models lose the output format 100k tokens back.
@@ -122,7 +133,7 @@ def prepare(system: str, q: dict, conn, corpus_text: str) -> dict:
 def ask(system: str, q: dict, prep: dict) -> dict:
     r = claude(prep["prompt"], INSTRUCTIONS, tools=prep.get("tools", ""), cwd=prep.get("cwd", "/tmp"),
                max_turns=prep.get("max_turns"), system_file=prep.get("system_file"),
-               model=MODELS[system.split("@")[1]] if "@" in system else MODEL)
+               model=MODELS[system.split("@")[1]] if "@" in system else MODEL, mcp=prep.get("mcp", False))
     answer, sources = parse(r.get("result", ""))
     extra = {k: prep[k] for k in ("retrieval_s", "retrieved") if k in prep}
     return {"id": q["id"], "category": q["category"], "system": system, "question": q["question"], "answer": answer,
