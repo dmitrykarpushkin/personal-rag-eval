@@ -1,0 +1,15 @@
+[project]
+name = "prag"
+version = "0.1.0"
+description = "Hybrid retrieval (Postgres FTS + pgvector + cross-encoder) over a personal markdown notebook, with a gold-set eval"
+requires-python = ">=3.11"
+dependencies = [
+  "psycopg[binary]>=3.2",
+  "pgvector>=0.3",
+  "numpy",
+  "pyyaml",
+  "sentence-transformers>=3.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
