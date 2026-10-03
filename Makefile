@@ -17,3 +17,6 @@ eval-answers:  ## needs a logged-in `claude` CLI
 
 report:
 	python eval/report.py
+
+corpus-xl:     ## main notebook + 2024-2025 archive, for the scaling run
+	rm -rf corpus-xl && mkdir corpus-xl && cp -r corpus/. corpus-xl/ && cp -rn archive/. corpus-xl/

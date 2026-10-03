@@ -1,0 +1,25 @@
+# Archive years for the scaling experiment: the same person's notebook before the main window.
+# Written to archive/ and merged with corpus/ to make the "xl" corpus. Dates: 2024-01-01 .. 2026-03-31.
+background:
+  - Jan 2024 - Dec 2025 Mara works full-time as a product engineer at Lumen Analytics (fictional, Tallinn, ~60 people,
+    B2B analytics). Manager: Oskar Nilsson until he left in mid-2024, then Kertu Vaher. Colleague: Hanna Kuusk (left
+    for Berlin in 2025). Internal projects: "Beacon" (customer health dashboard), "Atlas import" (CSV import pipeline),
+    "Pricing page revamp". She quits in Dec 2025 and goes freelance from Jan 2026.
+  - Lives in the same Kalamaja flat (landlord Mart Rebane) the whole time.
+  - Running: Tallinn half marathon Sept 2024 (1:58:40), Tartu half 2025, joins Kalamaja Runners in 2025.
+  - Ceramics: beginner wheel course at Savi studio autumn 2025 (teacher Anu Põld), first mugs, membership starts
+    Jan 2026 at €50/month (it later becomes €55 in spring 2026 and €65 in Aug 2026 — do not mention 2026 prices).
+  - Portuguese: dabbled with Duolingo in 2025 only; Lisbon idea first appears after a holiday in Lisbon in Oct 2025.
+  - Travel: Iceland ring road June 2024; Lisbon holiday Oct 2025; Narva family visits several times a year.
+  - Health: routine dentist check-ups with Dr. Helen Saar (Mar 2024, Mar 2025), eye exam with Dr. Peeter Mänd
+    (Nov 2025, new glasses). These are OLD appointments; dates must be in 2024/2025.
+  - Family: sister Elin (Narva, nurse), mother in Narva; family notes are often in Russian.
+  - Money: subscriptions and renewals in 2024/2025 (e.g. Figma renewed Oct 2025, Spotify, a gym membership she
+    cancelled in 2025); taxes as an employee (simple), switch to FIE planning in Dec 2025 with Kadri Tamm.
+rules:
+  - All notes dated 2024-01-01 .. 2026-03-31, filename date = created date.
+  - Must respect `forbidden` in spec/world.yaml (no blood type, no pets, no phone numbers, no airline names for the
+    June 2026 trip, nothing about the Arroios lease, no Portuguese placement test, no Hetzner prices, no invoice
+    numbers in the INV-2026-* series, no booking references, no Harbor rates).
+  - Never mention Kestrel Freight, Harbor, Glaze shop, the D8 visa, Rui Mendes, Inês Carvalho or Marta Sousa
+    (they enter her life from April 2026).
