@@ -30,6 +30,7 @@ def cmd_index(a):
     gone = [k for k in have if k not in live]
     for p, o in gone:
         conn.execute("DELETE FROM chunks WHERE path=%s AND ord=%s", (p, o))
+    store.refresh_stats(conn)
     print(json.dumps({"notes": len(notes), "chunks": len(chunks), "embedded": len(todo), "deleted": len(gone),
                       "seconds": round(time.perf_counter() - t, 1)}))
 

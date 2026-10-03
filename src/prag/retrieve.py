@@ -23,8 +23,30 @@ def _rows(cur, rows, score_idx=None):
     return out
 
 
+BM25_SQL = """
+WITH q AS (SELECT unnest(%(lex)s::text[]) AS word),
+idf AS (
+  SELECT q.word, ln(1 + (cs.n - coalesce(ts.ndoc, 0) + 0.5) / (coalesce(ts.ndoc, 0) + 0.5)) AS idf
+  FROM q CROSS JOIN corpus_stats cs LEFT JOIN term_stats ts ON ts.word = q.word
+),
+scored AS (
+  SELECT c.id,
+         sum(idf.idf * (u.tf * (%(k1)s + 1)) / (u.tf + %(k1)s * (1 - %(b)s + %(b)s * c.len / cs.avglen))) AS s
+  FROM chunks c
+  CROSS JOIN corpus_stats cs
+  JOIN LATERAL (SELECT lexeme, coalesce(array_length(positions, 1), 1)::float AS tf
+                FROM unnest(c.tsv) WHERE lexeme = ANY(%(lex)s::text[])) u ON true
+  JOIN idf ON idf.word = u.lexeme
+  WHERE c.tsv @@ to_tsquery('simple', %(tsq)s)
+  GROUP BY c.id
+)
+SELECT c.path, c.ord, c.created, c.title, c.heading, c.body, scored.s
+FROM scored JOIN chunks c USING (id) ORDER BY scored.s DESC LIMIT %(k)s
+"""
+
+
 def lexical(conn, q: str, k: int = 50) -> list[dict]:
-    """Postgres full-text search: OR over English+Russian stems of the query, ranked by ts_rank."""
+    """BM25 over Postgres full-text lexemes (English + Russian stems), computed in SQL."""
     lex = conn.execute(
         "SELECT array(SELECT DISTINCT unnest(tsvector_to_array(to_tsvector('english', %s) || to_tsvector('russian', %s))))",
         (q, q)).fetchone()[0]
@@ -32,9 +54,7 @@ def lexical(conn, q: str, k: int = 50) -> list[dict]:
     if not lex:
         return []
     tsq = " | ".join("'" + w.replace("'", "''") + "'" for w in lex)
-    rows = conn.execute(
-        f"SELECT {COLS}, ts_rank(tsv, to_tsquery('simple', %s), 1) AS s FROM chunks "
-        f"WHERE tsv @@ to_tsquery('simple', %s) ORDER BY s DESC LIMIT %s", (tsq, tsq, k)).fetchall()
+    rows = conn.execute(BM25_SQL, {"lex": lex, "tsq": tsq, "k1": 1.2, "b": 0.75, "k": k}).fetchall()
     return _rows(None, rows)
 
 
