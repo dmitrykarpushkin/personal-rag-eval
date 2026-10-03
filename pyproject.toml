@@ -11,5 +11,10 @@ dependencies = [
   "sentence-transformers>=3.0",
 ]
 
+[project.optional-dependencies]
+# prag.mcp_server uses FastMCP from the 1.x SDK (renamed to MCPServer in 2.x)
+mcp = ["mcp>=1.10,<2"]
+dev = ["pytest>=8"]
+
 [tool.setuptools.packages.find]
 where = ["src"]

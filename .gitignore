@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 eval/results/.full_context_system.txt
 corpus-xl/
+*.egg-info/
