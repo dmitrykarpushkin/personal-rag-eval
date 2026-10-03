@@ -17,7 +17,7 @@ from .chunk import load_corpus
 def cmd_index(a):
     root = Path(a.root)
     t = time.perf_counter()
-    notes, chunks = load_corpus(root)
+    notes, chunks = load_corpus(root, tuple(a.exclude))
     conn = store.connect()
     store.init(conn, reset=a.reset)
     # Incremental: re-embed only chunks whose text changed.
@@ -47,6 +47,7 @@ def main():
     ap = argparse.ArgumentParser(prog="prag")
     sub = ap.add_subparsers(required=True)
     i = sub.add_parser("index"); i.add_argument("root"); i.add_argument("--reset", action="store_true")
+    i.add_argument("--exclude", action="append", default=[], help="glob or folder (relative to root) to skip")
     i.set_defaults(fn=cmd_index)
     s = sub.add_parser("search"); s.add_argument("query"); s.add_argument("--system", default="hybrid+rerank")
     s.add_argument("-k", type=int, default=5); s.add_argument("--root", default="corpus"); s.set_defaults(fn=cmd_search)

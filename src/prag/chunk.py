@@ -40,7 +40,7 @@ class Chunk:
 
 
 def load_note(root: Path, p: Path) -> Note:
-    raw = p.read_text(encoding="utf-8")
+    raw = redact(p.read_text(encoding="utf-8", errors="replace"))
     meta, body = {}, raw
     m = FM.match(raw)
     if m:
@@ -96,8 +96,32 @@ def chunk_note(n: Note) -> list[Chunk]:
     return out
 
 
-def load_corpus(root: Path) -> tuple[list[Note], list[Chunk]]:
-    notes = [load_note(root, p) for p in sorted(root.rglob("*.md"))]
+# Folders that are never notes (real notebooks live next to code and build output).
+SKIP_DIRS = {".git", "node_modules", "dist", "build", ".venv", "venv", "__pycache__", ".next"}
+# Lines that look like credentials are dropped before indexing: raw captures sometimes contain them.
+SECRET = re.compile(r"(?i)(api[_-]?key|token|secret|password|passwd|пароль)\s*[:=]|"
+                    r"\b(sk-[A-Za-z0-9_-]{16,}|ghp_[A-Za-z0-9]{20,}|xox[abp]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|"
+                    r"\d{8,10}:[A-Za-z0-9_-]{30,})")
+
+
+def redact(text: str) -> str:
+    return "\n".join("[line removed: looks like a credential]" if SECRET.search(l) else l for l in text.split("\n"))
+
+
+def note_paths(root: Path, exclude: tuple[str, ...] = ()) -> list[Path]:
+    out = []
+    for p in sorted(root.rglob("*.md")):
+        rel = p.relative_to(root)
+        if any(part in SKIP_DIRS for part in rel.parts[:-1]):
+            continue
+        if any(rel.match(g) or str(rel).startswith(g.rstrip("/") + "/") for g in exclude):
+            continue
+        out.append(p)
+    return out
+
+
+def load_corpus(root: Path, exclude: tuple[str, ...] = ()) -> tuple[list[Note], list[Chunk]]:
+    notes = [load_note(root, p) for p in note_paths(root, exclude)]
     chunks = [c for n in notes for c in chunk_note(n)]
     return notes, chunks
 
