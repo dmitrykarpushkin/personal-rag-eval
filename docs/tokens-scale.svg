@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 270" width="720" height="270" font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="720" height="270" fill="#ffffff"/>
+<text x="20" y="24" font-size="15" font-weight="600" fill="#1f1f1e">Input tokens per question as the notebook grows</text>
+<text x="20" y="42" font-size="12" fill="#5f5e58">median; 333 notes (~39k words) vs 1,138 notes (~103k words)</text>
+<line x1="150.0" x2="150.0" y1="62" y2="230" stroke="#e6e5df"/>
+<text x="150.0" y="246" font-size="11" fill="#5f5e58" text-anchor="middle">0k</text>
+<line x1="326.7" x2="326.7" y1="62" y2="230" stroke="#e6e5df"/>
+<text x="326.7" y="246" font-size="11" fill="#5f5e58" text-anchor="middle">100k</text>
+<line x1="503.3" x2="503.3" y1="62" y2="230" stroke="#e6e5df"/>
+<text x="503.3" y="246" font-size="11" fill="#5f5e58" text-anchor="middle">200k</text>
+<line x1="680.0" x2="680.0" y1="62" y2="230" stroke="#e6e5df"/>
+<text x="680.0" y="246" font-size="11" fill="#5f5e58" text-anchor="middle">300k</text>
+<text x="140" y="89" font-size="12" fill="#1f1f1e" text-anchor="end">full-context</text>
+<rect x="150" y="70" width="181.3" height="14" rx="3" fill="#2a78d6"><title>full-context, 333 notes: 102,600 tokens</title></rect>
+<text x="337.3" y="81" font-size="11" fill="#5f5e58">103k</text>
+<rect x="150" y="86" width="477.0" height="14" rx="3" fill="#eb6834"><title>full-context, 1,138 notes: 269,976 tokens</title></rect>
+<text x="633.0" y="97" font-size="11" fill="#5f5e58">270k</text>
+<text x="140" y="137" font-size="12" fill="#1f1f1e" text-anchor="end">agentic-grep</text>
+<rect x="150" y="118" width="64.2" height="14" rx="3" fill="#2a78d6"><title>agentic-grep, 333 notes: 36,367 tokens</title></rect>
+<text x="220.2" y="129" font-size="11" fill="#5f5e58">36k</text>
+<rect x="150" y="134" width="76.2" height="14" rx="3" fill="#eb6834"><title>agentic-grep, 1,138 notes: 43,109 tokens</title></rect>
+<text x="232.2" y="145" font-size="11" fill="#5f5e58">43k</text>
+<text x="140" y="185" font-size="12" fill="#1f1f1e" text-anchor="end">agent+search</text>
+<rect x="150" y="166" width="44.4" height="14" rx="3" fill="#2a78d6"><title>agent+search, 333 notes: 25,152 tokens</title></rect>
+<text x="200.4" y="177" font-size="11" fill="#5f5e58">25k</text>
+<rect x="150" y="182" width="44.3" height="14" rx="3" fill="#eb6834"><title>agent+search, 1,138 notes: 25,087 tokens</title></rect>
+<text x="200.3" y="193" font-size="11" fill="#5f5e58">25k</text>
+<text x="140" y="233" font-size="12" fill="#1f1f1e" text-anchor="end">rag:hybrid+rerank</text>
+<rect x="150" y="214" width="15.2" height="14" rx="3" fill="#2a78d6"><title>rag:hybrid+rerank, 333 notes: 8,606 tokens</title></rect>
+<text x="171.2" y="225" font-size="11" fill="#5f5e58">9k</text>
+<rect x="150" y="230" width="17.1" height="14" rx="3" fill="#eb6834"><title>rag:hybrid+rerank, 1,138 notes: 9,658 tokens</title></rect>
+<text x="173.1" y="241" font-size="11" fill="#5f5e58">10k</text>
+<rect x="480" y="50" width="10" height="10" rx="2" fill="#2a78d6"/><text x="495" y="59" font-size="12" fill="#1f1f1e">333 notes</text>
+<rect x="580" y="50" width="10" height="10" rx="2" fill="#eb6834"/><text x="595" y="59" font-size="12" fill="#1f1f1e">1,138 notes</text>
+</svg>
