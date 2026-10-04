@@ -51,7 +51,8 @@ def main():
             notes = retrieve.notes_ranked(hits)
             gold = set(q["gold_notes"])
             ranks = [notes.index(g) + 1 for g in gold if g in notes]
-            rows.append({"id": q["id"], "category": q["category"], "system": s, "ms": round(secs * 1000, 1),
+            rows.append({"id": q["id"], "category": q["category"], "question": q["question"], "system": s,
+                         "ms": round(secs * 1000, 1),
                          "first_rank": min(ranks) if ranks else None,
                          "top5": notes[:5],
                          **{f"hit@{k}": any(r <= k for r in ranks) for k in (1, 3, 5, 10)},
