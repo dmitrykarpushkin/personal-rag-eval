@@ -92,6 +92,33 @@ hit@5 by question type, and the same table for the large notebook, are in
 [`eval/results/retrieval.md`](eval/results/retrieval.md) and
 [`eval/results/retrieval-xl.md`](eval/results/retrieval-xl.md).
 
+### Date-aware retrieval
+
+Notes go stale: the March note and the July note both match "what is my hourly rate", and plain relevance ranks
+them about the same. `hybrid+dates` ([`src/prag/dates.py`](src/prag/dates.py)) adds two things on top of the
+convex hybrid:
+
+- **date filters** `since` / `until` on the chunk date (front matter `created`, else a date in the file name, else,
+  with `PRAG_DATE_FROM_MTIME=1`, the file's modification time);
+- **a recency term**: score = (1 − w)·relevance + w·2^(−age / half-life), applied in `auto` mode only to questions
+  that ask for the current, latest or final value (a small EN/RU keyword detector). Settings:
+  `PRAG_RECENCY=off|auto|always`, `PRAG_RECENCY_WEIGHT` (w = 0.3), `PRAG_RECENCY_HALF_LIFE_DAYS` (90), `PRAG_TODAY`.
+  The defaults were set before the run, not tuned on the gold set.
+
+Paired comparison with the plain hybrid on the same index (eval date 2026-09-30; * = the interval excludes 0):
+
+| questions | hit@5 hybrid → +dates | difference | MRR difference |
+|---|---|---|---|
+| all answerable (111) | 0.86 → 0.88 | +0.02 [0.00, +0.05] | +0.01 [0.00, +0.02] * |
+| temporal (18) | 0.78 → 0.89 | +0.11 [0.00, +0.28] | +0.05 [+0.01, +0.11] * |
+| flagged as "current value" (14) | 0.79 → 0.93 | +0.14 [0.00, +0.36] | +0.06 [+0.01, +0.14] * |
+
+In `auto` mode only 4 questions change rank and all improve; nothing gets worse. With recency on every question
+(`always`, a control run) temporal questions gain a little more, but ordinary lookups lose (one gold note drops
+from rank 6 to 12, another from 11 to 23), which is why `auto` is the default. Details:
+[`eval/results/compare-dates.md`](eval/results/compare-dates.md),
+[`eval/results/compare-dates-always.md`](eval/results/compare-dates-always.md).
+
 ## How it works
 
 ```mermaid
@@ -162,6 +189,8 @@ pip install -e .                      # Python 3.11+
 docker compose up -d --wait           # Postgres 16 + pgvector on :5433
 make index                            # chunk + embed + index corpus/ (~2 min on 4 CPU cores)
 make goldset eval-retrieval           # retrieval metrics, no LLM needed
+PRAG_TODAY=2026-09-30 PRAG_SYSTEMS=hybrid,hybrid+dates PRAG_TAG=-dates python eval/run_retrieval.py
+PRAG_TAG=-dates python eval/compare_retrieval.py hybrid hybrid+dates   # paired comparison
 python -m prag.mcp_server &           # search tool for the agent runs
 make eval-answers report              # needs a logged-in `claude` CLI
 python eval/charts.py                 # docs/*.svg
