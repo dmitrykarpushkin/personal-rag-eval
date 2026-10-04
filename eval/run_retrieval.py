@@ -19,7 +19,10 @@ TAG = os.environ.get("PRAG_TAG", "")  # results suffix, e.g. "-xl"
 sys.path.insert(0, str(ROOT / "src"))
 from stats import bootstrap_ci, fmt_ci  # noqa: E402
 
-SYSTEMS = ["grep", "lexical", "dense", "hybrid-rrf", "hybrid", "hybrid+rerank"]
+ALL_SYSTEMS = ["grep", "lexical", "dense", "hybrid-rrf", "hybrid", "hybrid+dates", "hybrid+rerank"]
+# PRAG_SYSTEMS=hybrid,hybrid+dates runs a subset (the full set includes the slow CPU reranker)
+SYSTEMS = [s for s in os.environ.get("PRAG_SYSTEMS", "").split(",") if s] or [
+    s for s in ALL_SYSTEMS if s != "hybrid+dates"]
 
 
 def load_gold():
@@ -37,7 +40,8 @@ def main():
     qs = [q for q in load_gold() if q["answerable"]]
     conn = store.connect()
     retrieve.dense(conn, "warm up", 1)  # load the embedding model outside the timings
-    retrieve.hybrid_rerank(conn, "warm up", 1, pool=2)
+    if "hybrid+rerank" in SYSTEMS:
+        retrieve.hybrid_rerank(conn, "warm up", 1, pool=2)
     out = ROOT / "eval/results"
     out.mkdir(parents=True, exist_ok=True)
     rows = []
@@ -66,7 +70,8 @@ def summarize(rows, out):
         by[r["system"]].append(r)
     lines = ["| retriever | hit@1 | hit@5, 95% CI | recall@5 | recall@10 | MRR, 95% CI | median ms |",
              "|---|---|---|---|---|---|---|"]
-    for s in SYSTEMS:
+    systems = [s for s in ALL_SYSTEMS if s in by] + [s for s in by if s not in ALL_SYSTEMS]
+    for s in systems:
         rs = by[s]
         m = lambda k: st.mean(float(r[k]) for r in rs)  # noqa: E731
         ci = lambda k: fmt_ci(*bootstrap_ci([r[k] for r in rs]))  # noqa: E731
@@ -74,9 +79,9 @@ def summarize(rows, out):
                      f"{ci('mrr')} | {st.median(r['ms'] for r in rs):.0f} |")
     cats = sorted({r["category"] for r in rows})
     lines += ["", "hit@5 by question type:", "",
-              "| retriever | " + " | ".join(f"{c} (n={len([r for r in by[SYSTEMS[0]] if r['category']==c])})" for c in cats) + " |",
+              "| retriever | " + " | ".join(f"{c} (n={len([r for r in by[systems[0]] if r['category']==c])})" for c in cats) + " |",
               "|---|" + "---|" * len(cats)]
-    for s in SYSTEMS:
+    for s in systems:
         cells = []
         for c in cats:
             rs = [r for r in by[s] if r["category"] == c]
