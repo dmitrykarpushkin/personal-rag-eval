@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from . import models
+from .dates import Recency, rerank_by_recency
 
 COLS = "path, ord, created, title, heading, body"
 STOP = set("""a an the of to in on at for and or is are was were be been do does did what which who whom when where why how
@@ -38,6 +39,8 @@ scored AS (
                 FROM unnest(c.tsv) WHERE lexeme = ANY(%(lex)s::text[])) u ON true
   JOIN idf ON idf.word = u.lexeme
   WHERE c.tsv @@ to_tsquery('simple', %(tsq)s)
+    AND (%(since)s::date IS NULL OR c.created >= %(since)s::date)
+    AND (%(until)s::date IS NULL OR c.created <= %(until)s::date)
   GROUP BY c.id
 )
 SELECT c.path, c.ord, c.created, c.title, c.heading, c.body, scored.s
@@ -45,7 +48,10 @@ FROM scored JOIN chunks c USING (id) ORDER BY scored.s DESC LIMIT %(k)s
 """
 
 
-def lexical(conn, q: str, k: int = 50) -> list[dict]:
+DATE_SQL = "(%(since)s::date IS NULL OR created >= %(since)s::date) AND (%(until)s::date IS NULL OR created <= %(until)s::date)"
+
+
+def lexical(conn, q: str, k: int = 50, since=None, until=None) -> list[dict]:
     """BM25 over Postgres full-text lexemes (English + Russian stems), computed in SQL."""
     lex = conn.execute(
         "SELECT array(SELECT DISTINCT unnest(tsvector_to_array(to_tsvector('english', %s) || to_tsvector('russian', %s))))",
@@ -54,15 +60,17 @@ def lexical(conn, q: str, k: int = 50) -> list[dict]:
     if not lex:
         return []
     tsq = " | ".join("'" + w.replace("'", "''") + "'" for w in lex)
-    rows = conn.execute(BM25_SQL, {"lex": lex, "tsq": tsq, "k1": 1.2, "b": 0.75, "k": k}).fetchall()
+    rows = conn.execute(BM25_SQL, {"lex": lex, "tsq": tsq, "k1": 1.2, "b": 0.75, "k": k,
+                                   "since": since, "until": until}).fetchall()
     return _rows(None, rows)
 
 
-def dense(conn, q: str, k: int = 50) -> list[dict]:
+def dense(conn, q: str, k: int = 50, since=None, until=None) -> list[dict]:
     v = np.array(models.embed_one(q, "query"), dtype=np.float32)
     rows = conn.execute(
-        f"SELECT {COLS}, 1 - (embedding <=> %s) AS s FROM chunks ORDER BY embedding <=> %s LIMIT %s",
-        (v, v, k)).fetchall()
+        f"SELECT {COLS}, 1 - (embedding <=> %(v)s) AS s FROM chunks WHERE {DATE_SQL} "
+        "ORDER BY embedding <=> %(v)s LIMIT %(k)s",
+        {"v": v, "k": k, "since": since, "until": until}).fetchall()
     return _rows(None, rows)
 
 
@@ -89,17 +97,24 @@ def _minmax(lst: list[dict]) -> dict:
 ALPHA = 0.7  # weight of the dense score; picked on the hand-written half of the gold set (see README)
 
 
-def hybrid(conn, q: str, k: int = 50) -> list[dict]:
+def hybrid(conn, q: str, k: int = 50, since=None, until=None) -> list[dict]:
     """Convex fusion of min-max normalised BM25 and dense scores.
 
     Plain RRF was tried first and lost to dense alone (hit@5 0.77 vs 0.87): BM25 returns plenty of
     loosely matching chunks, and RRF rewards chunks that appear in both lists over a clear dense winner.
     """
-    L, D = lexical(conn, q, k), dense(conn, q, k)
+    L, D = lexical(conn, q, k, since, until), dense(conn, q, k, since, until)
     nl, nd = _minmax(L), _minmax(D)
     keep = {(d["path"], d["ord"]): d for d in L + D}
     ranked = sorted(keep, key=lambda key: -(ALPHA * nd.get(key, 0.0) + (1 - ALPHA) * nl.get(key, 0.0)))[:k]
     return [{**keep[key], "score": ALPHA * nd.get(key, 0.0) + (1 - ALPHA) * nl.get(key, 0.0)} for key in ranked]
+
+
+def hybrid_dated(conn, q: str, k: int = 50, since=None, until=None, recency: Recency | None = None) -> list[dict]:
+    """Hybrid with optional date filters, then a recency term when the question asks for the current value."""
+    cfg = recency or Recency.from_env()
+    cands = hybrid(conn, q, max(k, 50), since, until)
+    return (rerank_by_recency(cands, cfg) if cfg.applies(q) else cands)[:k]
 
 
 def hybrid_rrf(conn, q: str, k: int = 50) -> list[dict]:
@@ -144,6 +159,7 @@ SYSTEMS = {
     "dense": dense,
     "hybrid-rrf": hybrid_rrf,
     "hybrid": hybrid,
+    "hybrid+dates": hybrid_dated,
     "hybrid+rerank": hybrid_rerank,
 }
 

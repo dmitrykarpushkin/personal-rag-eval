@@ -31,8 +31,8 @@ def test_hybrid_is_a_convex_blend_weighted_towards_dense(monkeypatch):
     # BM25 likes "lex.md", dense likes "den.md"; with ALPHA = 0.7 the dense winner stays on top.
     lex = [hit("lex.md", score=12.0), hit("both.md", score=6.0), hit("den.md", score=0.0)]
     den = [hit("den.md", score=0.9), hit("both.md", score=0.6), hit("lex.md", score=0.3)]
-    monkeypatch.setattr(retrieve, "lexical", lambda conn, q, k: lex)
-    monkeypatch.setattr(retrieve, "dense", lambda conn, q, k: den)
+    monkeypatch.setattr(retrieve, "lexical", lambda conn, q, k, *a: lex)
+    monkeypatch.setattr(retrieve, "dense", lambda conn, q, k, *a: den)
     out = retrieve.hybrid(None, "q", k=3)
     assert [d["path"] for d in out] == ["den.md", "both.md", "lex.md"]
     a = retrieve.ALPHA
@@ -41,8 +41,8 @@ def test_hybrid_is_a_convex_blend_weighted_towards_dense(monkeypatch):
 
 
 def test_hybrid_keeps_chunks_found_by_only_one_retriever(monkeypatch):
-    monkeypatch.setattr(retrieve, "lexical", lambda conn, q, k: [hit("only-lex.md", score=3.0)])
-    monkeypatch.setattr(retrieve, "dense", lambda conn, q, k: [])
+    monkeypatch.setattr(retrieve, "lexical", lambda conn, q, k, *a: [hit("only-lex.md", score=3.0)])
+    monkeypatch.setattr(retrieve, "dense", lambda conn, q, k, *a: [])
     assert [d["path"] for d in retrieve.hybrid(None, "q")] == ["only-lex.md"]
 
 
