@@ -3,8 +3,10 @@
 A note is split on markdown headings; long sections are cut into windows of ~MAX_WORDS words with a small
 overlap. Every chunk carries the note path, its date and title, so the answer step can reason about recency.
 """
+import os
 import re
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
@@ -55,6 +57,8 @@ def load_note(root: Path, p: Path) -> Note:
     if not created:
         d = re.search(r"\d{4}-\d{2}-\d{2}", p.name)
         created = d.group(0) if d else ""
+    if not created and os.environ.get("PRAG_DATE_FROM_MTIME") == "1":  # real notebooks; meaningless on a fresh checkout
+        created = datetime.fromtimestamp(p.stat().st_mtime, timezone.utc).date().isoformat()
     tags = meta.get("tags") or []
     return Note(str(p.relative_to(root)), created, str(meta.get("source") or ""),
                 [str(t) for t in tags] if isinstance(tags, list) else [str(tags)], title, body.strip())
