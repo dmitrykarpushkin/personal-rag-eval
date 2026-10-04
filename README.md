@@ -42,17 +42,27 @@ needs no LLM judge:
 
 333-note notebook (`corpus/`), answering model Claude Sonnet 5.5 unless marked `@haiku`:
 
-| system | correct | answerable correct | right "not found" on unanswerable | cites a gold note | median input tokens | mean cost $ |
+| system | correct, 95% CI | answerable correct | right "not found" on unanswerable | cites a gold note | median input tokens | mean cost $ |
 |---|---|---|---|---|---|---|
-| agent+search | **0.99** | 0.99 | 1.00 | 0.99 | 25,152 | 0.029 |
-| agentic-grep | 0.98 | 0.98 | 1.00 | 0.97 | 36,367 | 0.040 |
-| full-context | 1.00 | 1.00 | 1.00 | 0.99 | 102,600 | 0.031 |
-| rag:hybrid+rerank | 0.92 | 0.93 | 0.88 | 0.92 | 8,606 | 0.017 |
-| rag:hybrid | 0.87 | 0.86 | 1.00 | 0.87 | 8,298 | 0.015 |
-| rag:dense | 0.87 | 0.87 | 0.88 | 0.89 | 8,371 | 0.016 |
-| full-context@haiku | 0.99 | 0.99 | 1.00 | 0.95 | 83,903 | 0.020 |
-| agentic-grep@haiku | 0.92 | 0.95 | 0.62 | 0.86 | 54,901 | 0.024 |
-| rag:hybrid@haiku | 0.87 | 0.86 | 1.00 | 0.83 | 10,575 | 0.009 |
+| agent+search | **0.99** [0.97–1.00] | 0.99 | 1.00 | 0.99 | 25,152 | 0.029 |
+| agentic-grep | 0.98 [0.96–1.00] | 0.98 | 1.00 | 0.97 | 36,367 | 0.040 |
+| full-context | 1.00 [1.00–1.00] | 1.00 | 1.00 | 0.99 | 102,600 | 0.031 |
+| rag:hybrid+rerank | 0.92 [0.87–0.97] | 0.93 | 0.88 | 0.92 | 8,606 | 0.017 |
+| rag:hybrid | 0.87 [0.82–0.93] | 0.86 | 1.00 | 0.87 | 8,298 | 0.015 |
+| rag:dense | 0.87 [0.82–0.93] | 0.87 | 0.88 | 0.89 | 8,371 | 0.016 |
+| full-context@haiku | 0.99 [0.98–1.00], 3 runs | 0.99 | 1.00 | 0.97 | 75,003 | 0.014 |
+| agentic-grep@haiku | 0.92 [0.87–0.96], 3 runs | 0.95 | 0.50 | 0.90 | 29,668 | 0.026 |
+| rag:hybrid@haiku | 0.87 [0.81–0.93] | 0.86 | 1.00 | 0.83 | 10,575 | 0.009 |
+
+Intervals are 95% percentile bootstrap over questions ([`eval/stats.py`](eval/stats.py)). Against agentic grep on
+the same questions (paired bootstrap), every one-shot RAG variant is worse with the interval excluding zero
+(rag:hybrid −0.11 [−0.17, −0.05], rag:hybrid+rerank −0.06 [−0.12, −0.01]); agent+search (+0.01 [−0.02, +0.04])
+and the whole notebook in context (+0.02 [+0.00, +0.04]) are not distinguishable from it on 119 questions.
+
+Run-to-run noise, three identical runs: agentic-grep@haiku 0.924 / 0.924 / 0.916, with 5% of questions flipping
+between right and wrong; full-context@haiku 0.992 in all three, 1.7% flipping. So differences of one or two
+points between agent setups are within noise; the gap to one-shot RAG is not. Rows with 3 runs are pooled over
+the runs.
 
 1,138-note notebook (`corpus/` + `archive/`, the same questions):
 
@@ -135,7 +145,8 @@ flowchart LR
 ## Limitations
 
 - The corpus is synthetic and written by LLMs. Real notes are messier and more repetitive.
-- 119 questions give wide confidence intervals: one question is 0.8 points. Each system was run once.
+- 119 questions give wide confidence intervals (one question is 0.8 points); the tables show them. Most systems
+  were run once; two were run three times to measure run-to-run noise (`run_answers.py --repeat`).
 - Latency is wall-clock on a 4-core VM with 4 parallel workers, so it is useful for comparison only. The
   reranker is the slow part on a CPU.
 - Costs come from Claude Code's `total_cost_usd` (API list prices, prompt caching on). They are reported for
