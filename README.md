@@ -119,6 +119,33 @@ from rank 6 to 12, another from 11 to 23), which is why `auto` is the default. D
 [`eval/results/compare-dates.md`](eval/results/compare-dates.md),
 [`eval/results/compare-dates-always.md`](eval/results/compare-dates-always.md).
 
+### Embedding models
+
+Does the 560M-parameter e5-large earn its cost? The same corpus is indexed three times, once per embedder, each in
+its own database (`PRAG_DSN`, `PRAG_EMBED_MODEL`, `PRAG_EMBED_DIM`). The E5 query/passage prefixes are kept for E5
+models only. BM25 and the fusion weight (0.7) stay the same. All three runs use the current corpus, so the e5-large
+row can differ by a point from the table above.
+
+| embedder | dims | dense hit@5 | dense MRR | hybrid hit@5 | hybrid MRR | median query ms |
+|---|---|---|---|---|---|---|
+| multilingual-e5-large | 1024 | 0.87 [0.81–0.93] | 0.69 | 0.86 [0.80–0.93] | 0.71 | 125 |
+| multilingual-e5-base | 768 | 0.77 [0.69–0.85] | 0.61 | 0.81 [0.74–0.88] | 0.64 | 43 |
+| bge-m3 | 1024 | 0.85 [0.77–0.91] | 0.65 | 0.86 [0.80–0.93] | 0.70 | 135 |
+
+Paired against e5-large on the same 111 questions (* = the interval excludes 0):
+
+- **e5-base is clearly worse.** Dense: hit@5 −0.10 [−0.17, −0.03] *, MRR −0.08 [−0.15, −0.02] *. Hybrid:
+  hit@5 −0.05 [−0.12, +0.01], MRR −0.07 [−0.11, −0.02] *. BM25 recovers about half of the hit@5 loss. In exchange, queries
+  are 2.6–2.9× faster on CPU (median 47 vs 124 ms hybrid, 43 vs 125 ms dense).
+- **bge-m3 matches e5-large inside hybrid search.** Hybrid: hit@5 +0.00 [−0.06, +0.06], MRR −0.00 [−0.05, +0.05].
+  Dense alone is slightly behind: hit@5 −0.03 [−0.09, +0.04], MRR −0.04 [−0.09, +0.02], neither significant. The
+  question types differ: bge-m3 is better on paraphrases (hybrid 0.83 vs 0.70) and worse on multi-hop questions
+  (0.75 vs 1.00). With 8 to 23 questions per type, these per-type differences are not significant.
+
+Indexing the 518 chunks took 63 s with e5-base and 168 s with bge-m3. e5-large was not re-indexed for this run.
+Details: [`eval/results/retrieval-emb.md`](eval/results/retrieval-emb.md),
+[`eval/results/compare-emb.md`](eval/results/compare-emb.md); reproduce with `eval/compare_embeddings.py`.
+
 ## How it works
 
 ```mermaid
