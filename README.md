@@ -146,6 +146,29 @@ Indexing the 518 chunks took 63 s with e5-base and 168 s with bge-m3. e5-large w
 Details: [`eval/results/retrieval-emb.md`](eval/results/retrieval-emb.md),
 [`eval/results/compare-emb.md`](eval/results/compare-emb.md); reproduce with `eval/compare_embeddings.py`.
 
+### Multi-query
+
+`hybrid+mq` ([`src/prag/multiquery.py`](src/prag/multiquery.py)): Claude Haiku 4.5 rewrites the question into 3
+search queries (other wording, the kind of note, at least one in the other language). The convex hybrid search runs
+for the question and each rewrite, and the scores are summed per chunk. The number of rewrites and the fusion rule
+were fixed before the run. Rewrites are cached ([`eval/results/rewrites.jsonl`](eval/results/rewrites.jsonl), made
+by `eval/make_rewrites.py`), so the retrieval numbers are repeatable.
+
+Paired comparison with the plain hybrid on the same index and the same 111 questions (* = the interval excludes 0):
+
+| questions | hit@5 hybrid → +mq | difference | MRR difference |
+|---|---|---|---|
+| all answerable (111) | 0.86 → 0.91 | +0.05 [0.00, +0.10] | +0.04 [0.00, +0.09] |
+| temporal (18) | 0.78 → 0.78 | +0.00 [−0.17, +0.17] | −0.02 [−0.13, +0.08] |
+| flagged as "current value" (14) | 0.79 → 0.86 | +0.07 [0.00, +0.21] | −0.03 [−0.15, +0.10] |
+
+Seven questions enter the top 5 and two drop out. The gains are on paraphrased questions (hit@5 0.70 → 0.83),
+cross-language questions (0.82 → 0.91) and aggregates (0.91 → 1.00). Multi-hop questions lose one (1.00 → 0.88).
+The overall gain sits right at the edge of significance on 111 questions. What it costs: about 10 s of model time
+per question (median, before caching), $0.006 per question at list prices, and 4× the search time (median 600 vs
+150 ms, four hybrid searches). Details: [`eval/results/retrieval-mq.md`](eval/results/retrieval-mq.md),
+[`eval/results/compare-mq.md`](eval/results/compare-mq.md).
+
 ## How it works
 
 ```mermaid

@@ -19,10 +19,11 @@ TAG = os.environ.get("PRAG_TAG", "")  # results suffix, e.g. "-xl"
 sys.path.insert(0, str(ROOT / "src"))
 from stats import bootstrap_ci, fmt_ci  # noqa: E402
 
-ALL_SYSTEMS = ["grep", "lexical", "dense", "hybrid-rrf", "hybrid", "hybrid+dates", "hybrid+rerank"]
-# PRAG_SYSTEMS=hybrid,hybrid+dates runs a subset (the full set includes the slow CPU reranker)
+ALL_SYSTEMS = ["grep", "lexical", "dense", "hybrid-rrf", "hybrid", "hybrid+dates", "hybrid+rerank", "hybrid+mq"]
+# PRAG_SYSTEMS=hybrid,hybrid+dates runs a subset (the full set includes the slow CPU reranker);
+# hybrid+mq needs the rewrite cache from eval/make_rewrites.py, so it runs only when named
 SYSTEMS = [s for s in os.environ.get("PRAG_SYSTEMS", "").split(",") if s] or [
-    s for s in ALL_SYSTEMS if s != "hybrid+dates"]
+    s for s in ALL_SYSTEMS if s not in ("hybrid+dates", "hybrid+mq")]
 
 
 def load_gold():

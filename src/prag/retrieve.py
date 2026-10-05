@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from . import models
+from . import multiquery
 from .dates import Recency, rerank_by_recency
 
 COLS = "path, ord, created, title, heading, body"
@@ -161,6 +162,7 @@ SYSTEMS = {
     "hybrid": hybrid,
     "hybrid+dates": hybrid_dated,
     "hybrid+rerank": hybrid_rerank,
+    "hybrid+mq": lambda conn, q, k=50: multiquery.hybrid_multi(conn, q, k),
 }
 
 
