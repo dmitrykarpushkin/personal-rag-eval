@@ -135,8 +135,8 @@ row can differ by a point from the table above.
 Paired against e5-large on the same 111 questions (* = the interval excludes 0):
 
 - **e5-base is clearly worse.** Dense: hit@5 −0.10 [−0.17, −0.03] *, MRR −0.08 [−0.15, −0.02] *. Hybrid:
-  hit@5 −0.05 [−0.12, +0.01], MRR −0.07 [−0.11, −0.02] *. BM25 recovers about half of the hit@5 loss. In exchange,
-  queries are about 3× faster on CPU.
+  hit@5 −0.05 [−0.12, +0.01], MRR −0.07 [−0.11, −0.02] *. BM25 recovers about half of the hit@5 loss. In exchange, queries
+  are 2.6–2.9× faster on CPU (median 47 vs 124 ms hybrid, 43 vs 125 ms dense).
 - **bge-m3 matches e5-large inside hybrid search.** Hybrid: hit@5 +0.00 [−0.06, +0.06], MRR −0.00 [−0.05, +0.05].
   Dense alone is slightly behind: hit@5 −0.03 [−0.09, +0.04], MRR −0.04 [−0.09, +0.02], neither significant. The
   question types differ: bge-m3 is better on paraphrases (hybrid 0.83 vs 0.70) and worse on multi-hop questions
